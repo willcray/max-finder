@@ -1,0 +1,26 @@
+max_finder_approach
+
+	parse command line input
+	second argument is the text file
+	open text file and insert integers into an array for analysis
+
+	while largest integer is not found
+		while all threads in current round are not finished (use)
+			create n/2 threads
+			each thread finds the larger of two numbers
+			round two doesn't start until all n/2 threads are finished
+
+	print the result, terminate program
+
+
+thread synchronization
+	implement a barrier
+
+
+
+
+Specs
+	integers to be analyzed are stored in a .txt file (all ints on one line)
+	.txt file taken as command line argument
+	num of ints is always a power of two
+	num of ints will never be above 4096
