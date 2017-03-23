@@ -1,16 +1,17 @@
 CC = gcc -std=c99
 CFLAGS  = -Wall -g
-OFILES: barrier.o max_finder.o main.o
+HEADERS = max_finder.h barrier.h
+OFILES = barrier.o max_finder.o main.o
+CFILES = main.c barrier.c max_finder.c
 
-all: main
+program: $(OFILES)
+	$(CC) $(CFLAGS) $(OFILES) -o max_finder
 
-main:   $(OFILES)
-        $(CC) -o max_finder main.c barrier.c max_finder.c $(CFLAGS) $(OFILES)
+main.o: main.c $(HEADERS)
+	$(CC) $(CFLAGS) -c main.c
 
-main.o: main.c
-        $(CC) $(CFLAGS) main.c
-barrier.o: barrier.c
-        $(CC) $(CFLAGS) barrier.c
+barrier.o: barrier.c barrier.h
+	$(CC) $(CFLAGS) -c barrier.c
 
-max_finder.o: max_finder.c
-        $(CC) $(CFLAGS) max_finder.c
+max_finder.o: max_finder.c max_finder.h
+	$(CC) $(CFLAGS) -c max_finder.c
