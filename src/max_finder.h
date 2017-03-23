@@ -1,7 +1,8 @@
 #ifndef MAX_FINDER_H_
 #define MAX_FINDER_H_
 
-int * parse(char* args);
+using namespace std;
 
+vector<int> parse(string file);
 
 #endif MAX_FINDER_H_

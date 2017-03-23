@@ -1,17 +1,17 @@
-CC = gcc -std=c99
-CFLAGS  = -Wall -g
+CXX = g++ -std=c++11
+CXXFLAGS  = -Wall -g
 HEADERS = max_finder.h barrier.h
 OFILES = barrier.o max_finder.o main.o
-CFILES = main.c barrier.c max_finder.c
+CXXFILES = main.cpp barrier.cpp max_finder.cpp
 
 program: $(OFILES)
-	$(CC) $(CFLAGS) $(OFILES) -o max_finder
+	$(CXX) $(CXXFLAGS) $(OFILES) -o max_finder
 
-main.o: main.c $(HEADERS)
-	$(CC) $(CFLAGS) -c main.c
+main.o: main.cpp $(HEADERS)
+	$(CXX) $(CXXFLAGS) -c main.cpp
 
-barrier.o: barrier.c barrier.h
-	$(CC) $(CFLAGS) -c barrier.c
+barrier.o: barrier.cpp barrier.h
+	$(CXX) $(CXXFLAGS) -c barrier.cpp
 
-max_finder.o: max_finder.c max_finder.h
-	$(CC) $(CFLAGS) -c max_finder.c
+max_finder.o: max_finder.cpp max_finder.h
+	$(CXX) $(CXXFLAGS) -c max_finder.cpp
