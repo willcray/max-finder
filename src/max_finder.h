@@ -4,5 +4,6 @@
 using namespace std;
 
 vector<int> parse(string file);
+int max(vector<int> twoNums);
 
 #endif MAX_FINDER_H_

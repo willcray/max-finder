@@ -37,3 +37,23 @@ vector<int> parse(string fileName)
 	}
 	return nums;
 }
+
+int max(vector<int> twoNums)
+{
+	if(twoNums.size() != 2)
+	{
+		cout << "ERROR: max() function not passed vector of size 2" << endl;
+		exit(1);
+	}
+	else
+	{
+		if(twoNums.at(0) > twoNums.at(1))
+		{
+			return twoNums.at(0);
+		}
+		else
+		{
+			return twoNums.at(1);
+		}
+	}
+}

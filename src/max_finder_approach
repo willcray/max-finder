@@ -6,7 +6,7 @@ max_finder_approach
 
 	while largest integer is not found
 		while all threads in current round are not finished (use)
-			create n/2 threads
+			create n/2 threads, passing each one the two numbers
 			each thread finds the larger of two numbers
 			round two doesn't start until all n/2 threads are finished
 
