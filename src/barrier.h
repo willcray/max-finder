@@ -2,5 +2,5 @@
 #define BARRIER_H_
 
 
-#endif BARRIER_H_
+#endif
 

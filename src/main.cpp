@@ -21,20 +21,9 @@ int main(int argc, char *argv[])
 	// get vector of ints from txt file
 	vector<int> nums = parse(argv[1]);
 
-	bool notFound = true;
-	int numThreads = nums.size() / 2;
-	while(notFound)
-	{
-		pthread_t threads[numThreads];
-		vector<int> twoNums;
-		int threadCount = 0;
-		for(int i = 0; i < nums.size(); i = i + 2)
-		{
-			// pthread_create(&threads[threadCount], NULL, max, (void *) twoNums);
-		}
-		// update number of threads to be created
-		numThreads /= 2;
-	}
+	int max = recurse(nums);
+	cout << "FINISHED: max number is " << max << endl;
+	
 
 
 	return 0;
