@@ -7,14 +7,14 @@ using namespace std;
 
 struct ThreadArgs
 {
-	int globalNums[4096];
 	int l;
 	int r;
 	ThreadArgs()
 	{}
 };
 
-extern ThreadArgs args;
+extern int globalNums[4096];
+extern ThreadArgs args[2048];
 
 vector<int> parse(string file);
 void * compare(void * args);

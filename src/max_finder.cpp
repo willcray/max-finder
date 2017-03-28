@@ -10,7 +10,8 @@
 
 using namespace std;
 
-ThreadArgs args;
+ThreadArgs args[2048];
+int globalNums[4096];
 
 vector<int> parse(string fileName)
 {
@@ -39,7 +40,6 @@ vector<int> parse(string fileName)
 
 void * compare(void * passedArgs)
 {
-
 	// compare the two variables
 	ThreadArgs * s = (ThreadArgs*)passedArgs;
 	int left = s->l;
@@ -52,11 +52,11 @@ void * compare(void * passedArgs)
 		exit(1);
 	}
 	// CRITICAL SECTION
-	if(s->globalNums[left] < s->globalNums[right])
+	if(globalNums[left] < globalNums[right])
 	{
-		int temp = s->globalNums[left];
-		s->globalNums[left] = s->globalNums[right];
-		s->globalNums[right] = temp;
+		int temp = globalNums[left];
+		globalNums[left] = globalNums[right];
+		globalNums[right] = temp;
 	}
 
 	b.barrierPoint();
@@ -77,7 +77,7 @@ int run(vector<int> * nums)
 	int numRounds = log2(nums->size());
 
 	// set up struct to be passed as thread argument
-	copy(nums->begin(), nums->end(), args.globalNums);
+	copy(nums->begin(), nums->end(), globalNums);
 
 	int indexDiff = 1;
 	int iterDiff = 2;
@@ -95,13 +95,13 @@ int run(vector<int> * nums)
 		for(int i = 0; i < nums->size(); i = i + iterDiff)
 		{
 			// update indices to be checked by this thread
-			args.l = i;
-			args.r = i + indexDiff;
+			args[i].l = i;
+			args[i].r = i + indexDiff;
 
 			pthread_attr_t tattr;
 			pthread_attr_init(&tattr);
 			pthread_attr_setdetachstate(&tattr,PTHREAD_CREATE_DETACHED);
-			if(pthread_create(&threads[i], &tattr, compare, &args) < 0)
+			if(pthread_create(&threads[i], &tattr, compare, &args[i]) < 0)
 			{
 				cout << "ERROR: run(): pthread_create call unsuccessful" << endl;
 				exit(1);
@@ -112,6 +112,7 @@ int run(vector<int> * nums)
 				// cout << "left index is " << args.l << "; right index is " << args.r << endl;
 			}
 			++threadIndex;
+			cout << "left index:" << args[i].l << ": Right index:" << args[i].r << ":" << endl;
 		}
 		--numRounds;
 		indexDiff *= 2;
@@ -138,5 +139,5 @@ int run(vector<int> * nums)
 		cout << args.globalNums[i] << endl;
 	}
 	*/
-	return args.globalNums[0];
+	return globalNums[0];
 }
