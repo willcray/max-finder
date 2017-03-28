@@ -1,5 +1,5 @@
 CXX = g++ -std=c++11
-CXXFLAGS  = -Wall -g
+CXXFLAGS  = -Wall -g -pthread
 HEADERS = max_finder.h barrier.h
 OFILES = barrier.o max_finder.o main.o
 CXXFILES = main.cpp barrier.cpp max_finder.cpp
