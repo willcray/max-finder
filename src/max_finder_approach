@@ -13,7 +13,21 @@ pass a struct with a global variable array in it
 
 34 15 15 8 91 24 68 17 difference 4
 
-91 24 68 17 34 15 15 8 difference 
+91 24 68 17 34 15 15 8
+
+
+//////// TEST 2 /////////// - left is 8, right is 12, diff is 4
+12 3 69 45 23 40 39 34 2 1 35 43 26 17 14 100
+
+12 3 69 45 40 23 39 34 2 1 43 35 26 17 100 14
+
+69 45 12 3 40 23 39 34 43 35 2 1 100 14 26 17
+
+69 45 12 3 40 23 39 34 100 14 26 17 43 35 2 1
+
+100 14 26 17 43 35 2 1 69 45 12 3 40 23 39 34
+
+
 
 
 each thread will perform a merge sort to manipulate its section of the global array variable

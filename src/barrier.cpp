@@ -1,58 +1,37 @@
 #include <stdlib.h>
 #include <semaphore.h>
+#include <pthread.h>
+#include <stdio.h>
 #include "barrier.h"
 
 // 3 binary mutexes/semaphores
 // wait - sent to true once all threads have finished/count reaches 0
 // decrement - controls access to decrement the count variable
-// handshake
 
 Barrier b;
 
-int Barrier::init(int n)
+void Barrier::init(int n)
 {
-	this->threadsRunning = n;
-	this->w = PTHREAD_MUTEX_INITIALIZER;
-	this->d = PTHREAD_MUTEX_INITIALIZER;
-	this->h = PTHREAD_MUTEX_INITIALIZER;
+	this->n = n;
+	this->count = 0;
+	pthread_mutex_init(&d, NULL);
 	pthread_cond_init(&cv, NULL);
 }
 
-int Barrier::setThreadNum(int n)
+void Barrier::barrierPoint()
 {
-	this->threadsRunning = n;
-}
+	// check for decrement mutex
+	pthread_mutex_lock(&d);
 
-int Barrier::wait()
-{
+	// wait on increment semaphore
+	++this->count;
 
-}
-
-int Barrier::tryWait()
-{
-
-}
-
-int Barrier::signal()
-{
-
-}
-
-int Barrier::barrier_point(void)
-{
-	// check for decrement semaphore
-	// wait on decrement semaphore
-		--threadsRunning;
-
-	if(threadsRunning != 0)
+	if(this->count == n)
 	{
-		// wait() on condition variable wait
+		pthread_cond_broadcast(&cv);
 	}
-	else
-	{
-		// pthread_cond_broadcast();
-	}
-	return threadsRunning;
+	pthread_mutex_unlock(&d);
+
 	/*
 	The barrier can be implemented in such a way that it is shared by all rounds of
 	comparisons via passing a value to it indicating the number of threads running concurrently for a
@@ -65,8 +44,6 @@ int Barrier::barrier_point(void)
 	variable via invoking the pthread_cond_broadcast() function).
 	*/
 }
-
-
 
 
 

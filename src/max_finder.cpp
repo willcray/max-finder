@@ -10,6 +10,8 @@
 
 using namespace std;
 
+ThreadArgs args;
+
 vector<int> parse(string fileName)
 {
 	vector<int> nums;
@@ -31,65 +33,40 @@ vector<int> parse(string fileName)
 			nums.push_back(stoi(strNum));
 		}
 		file.close();
-	}/*
-	for (auto &ele : nums)
-	{
-		cout << ele << endl;
 	}
-	*/
 	return nums;
 }
 
-void * compare(void * args)
+void * compare(void * passedArgs)
 {
+
 	// compare the two variables
-	ThreadArgs * s = (ThreadArgs*)args;
-	for (auto &ele : s->globalNums)
-	{
-		cout << ele << endl;
-	}
+	ThreadArgs * s = (ThreadArgs*)passedArgs;
 	int left = s->l;
 	int right = s->r;
-
 	// cout << "left index: " << left << "; right index: " << right << endl;
 	// check if left index is less than the right index
-	if(left > right)
+	if(left >= right)
 	{
 		cout << "ERROR: compare(): left index is greater than right" << endl;
 		exit(1);
 	}
-	// compare the two numbers at that index
-	// if left is bigger, do nothing
-	if(s->globalNums.at(left) > s->globalNums.at(right))
+	// CRITICAL SECTION
+	if(s->globalNums[left] < s->globalNums[right])
 	{
-		// b.wait()
-	}
-	// CRITICAL SECTION - swap the subarrays
-	else
-	{
-		b.barrier_point();
+		int temp = s->globalNums[left];
+		s->globalNums[left] = s->globalNums[right];
+		s->globalNums[right] = temp;
 	}
 
-		vector<int> leftCopy(right - left);
-		for (int i = 0; i < right; ++i)
-		{
-			leftCopy.at(i) = s->globalNums.at(i);
-		}
-		for (int i = 0; i < right; ++i)
-		{
-			// replace left subarray with right subarray
-			s->globalNums.at(i) = s->globalNums.at(i + right);
-		}
-		for (int i = right; i < s->globalNums.size(); ++i)
-		{
-			// replace right side with copy of left
-			s->globalNums.at(i) = leftCopy.at(i - right);
-		}		
+	b.barrierPoint();
+
+	// clean up and exit
+	pthread_exit(NULL);
 }
 
 int run(vector<int> * nums)
 {
-	cout << "entering run()" << endl;
 	// case where it's a size of 1
 	if (nums->size() == 1)
 	{
@@ -99,29 +76,23 @@ int run(vector<int> * nums)
 	int numThreads = nums->size() / 2;
 	int numRounds = log2(nums->size());
 
-	// set up barrier
-	b.init(numThreads);
-
 	// set up struct to be passed as thread argument
-
-	ThreadArgs args;
-	args.globalNums = *nums;
+	copy(nums->begin(), nums->end(), args.globalNums);
 
 	int indexDiff = 1;
 	int iterDiff = 2;
-
-	// generate each round of analysis
+	b.init(numThreads);
 
 	while(numRounds > 0)
 	{
 		// update global information
-		b.setThreadNum(numThreads);
+		// cout << "calling init for " << numThreads << " threads" << endl;
 
 		// set up threading
 		pthread_t threads[numThreads];
 		int threadIndex = 0;
 		// spin threads for this round
-		for(int i = 0; i < numThreads; i = i + iterDiff)
+		for(int i = 0; i < nums->size(); i = i + iterDiff)
 		{
 			// update indices to be checked by this thread
 			args.l = i;
@@ -138,13 +109,34 @@ int run(vector<int> * nums)
 			else
 			{
 				// cout << "pthread #" << threads[threadIndex] << " created successfully" << endl;
+				// cout << "left index is " << args.l << "; right index is " << args.r << endl;
 			}
 			++threadIndex;
 		}
 		--numRounds;
 		indexDiff *= 2;
 		iterDiff *= 2;
+		numThreads /= 2;
+
+		
+		pthread_mutex_lock(&b.d);
+		while(b.count < b.n)
+		{
+			pthread_cond_wait(&b.cv, &b.d);
+		}
+		b.count = 0;
+		b.n = numThreads;
+		pthread_mutex_unlock(&b.d);
+		
 	}
+	pthread_mutex_destroy(&b.d);
+    pthread_cond_destroy(&b.cv);
 	// largest value will be at far left of global vector
-	return args.globalNums.at(0);
+	/*
+	for(int i = 0; i < 50; ++i)
+	{
+		cout << args.globalNums[i] << endl;
+	}
+	*/
+	return args.globalNums[0];
 }
