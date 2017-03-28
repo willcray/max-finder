@@ -26,7 +26,7 @@ void Barrier::barrierPoint()
 	// wait on increment semaphore
 	++this->count;
 
-	if(this->count == n)
+	if(this->count == this->n)
 	{
 		pthread_cond_broadcast(&cv);
 	}

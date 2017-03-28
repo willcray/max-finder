@@ -51,6 +51,7 @@ void * compare(void * passedArgs)
 		cout << "ERROR: compare(): left index is greater than right" << endl;
 		exit(1);
 	}
+	b.barrierPoint();
 	// CRITICAL SECTION
 	if(globalNums[left] < globalNums[right])
 	{
@@ -58,8 +59,6 @@ void * compare(void * passedArgs)
 		globalNums[left] = globalNums[right];
 		globalNums[right] = temp;
 	}
-
-	b.barrierPoint();
 
 	// clean up and exit
 	pthread_exit(NULL);
@@ -121,7 +120,7 @@ int run(vector<int> * nums)
 
 		
 		pthread_mutex_lock(&b.d);
-		while(b.count < b.n)
+		while(b.count != b.n)
 		{
 			pthread_cond_wait(&b.cv, &b.d);
 		}
