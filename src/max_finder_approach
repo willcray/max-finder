@@ -1,26 +1,43 @@
 max_finder_approach
 
-	parse command line input
-	second argument is the text file
-	open text file and insert integers into an array for analysis
+pass the routine that the thread executes a struct
+	struct contains the vector being operated on
+	operate on the vector using pointers
 
-	while largest integer is not found
-		while all threads in current round are not finished (use)
-			create n/2 threads, passing each one the two numbers
-			each thread finds the larger of two numbers
-			round two doesn't start until all n/2 threads are finished
-
-	print the result, terminate program
+pass a struct with a global variable array in it
 
 
-thread synchronization
-	implement a barrier
+15 8 15 34 91 24 17 68 difference 1
+
+15 8 34 15 91 24 68 17 difference 2
+
+34 15 15 8 91 24 68 17 difference 4
+
+91 24 68 17 34 15 15 8 difference 
 
 
+each thread will perform a merge sort to manipulate its section of the global array variable
+
+give each thread the original array and a left and right index to compare
+
+check if left index is less than the right index
+	compare the two numbers at that index
+	if left is bigger, do nothing
+	else
+	// CRITICAL SECTION
+		swap the two subarrays
+		int leftCopy[r - l];
+		for (int i = 0; i < r; ++i)
+		{
+			// generate copy of left subarray
+		}
+		for (int i = 0; i < r; ++i)
+		{
+			// replace left subarray with right subarray
+		}
+		for (int i = 0; i < r; ++i)
+		{
+			// replace right side with copy of left
+		}		
 
 
-Specs
-	integers to be analyzed are stored in a .txt file (all ints on one line)
-	.txt file taken as command line argument
-	num of ints is always a power of two
-	num of ints will never be above 4096

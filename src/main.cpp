@@ -5,7 +5,6 @@
 #include <vector>
 #include <pthread.h>
 #include "max_finder.h"
-#include "barrier.h"
 
 using namespace std;
 
@@ -20,11 +19,8 @@ int main(int argc, char *argv[])
 
 	// get vector of ints from txt file
 	vector<int> nums = parse(argv[1]);
-
-	int max = recurse(nums);
+	int max = run(&nums);
 	cout << "FINISHED: max number is " << max << endl;
-	
-
 
 	return 0;
 }
