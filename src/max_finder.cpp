@@ -30,7 +30,7 @@ vector<int> parse(string fileName)
 		// file is opened properly
 		while(file.good())
 		{
-			getline(file, strNum, ' ');
+			getline(file, strNum, '\n');
 			nums.push_back(stoi(strNum));
 		}
 		file.close();
