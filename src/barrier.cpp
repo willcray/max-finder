@@ -31,10 +31,7 @@ void Barrier::barrierPoint()
 	{
 		pthread_cond_broadcast(&cv);
 	}
-	else
-	{
-		pthread_cond_wait(&cv, &d);
-	}
+
 	pthread_mutex_unlock(&d);
 
 	/*
