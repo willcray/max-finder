@@ -26,7 +26,7 @@ vector<int> parse(string fileName)
 	}
 	else
 	{
-		string strNum;
+		string strNum = "";
 		// file is opened properly
 		while(file.good())
 		{
