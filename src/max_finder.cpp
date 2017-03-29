@@ -51,7 +51,7 @@ void * compare(void * passedArgs)
 		cout << "ERROR: compare(): left index is greater than right" << endl;
 		exit(1);
 	}
-	b.barrierPoint();
+
 	// CRITICAL SECTION
 	if(globalNums[left] < globalNums[right])
 	{
@@ -59,7 +59,7 @@ void * compare(void * passedArgs)
 		globalNums[left] = globalNums[right];
 		globalNums[right] = temp;
 	}
-
+	b.barrierPoint();
 	// clean up and exit
 	pthread_exit(NULL);
 }
@@ -84,9 +84,6 @@ int run(vector<int> * nums)
 
 	while(numRounds > 0)
 	{
-		// update global information
-		// cout << "calling init for " << numThreads << " threads" << endl;
-
 		// set up threading
 		pthread_t threads[numThreads];
 		int threadIndex = 0;
@@ -117,19 +114,20 @@ int run(vector<int> * nums)
 		indexDiff *= 2;
 		iterDiff *= 2;
 		numThreads /= 2;
-
 		
-		pthread_mutex_lock(&b.d);
-		while(b.count > 0)
+		pthread_mutex_lock(&d);
+		if (b.count != 0)
 		{
-			pthread_cond_wait(&b.cv, &b.d);
+			pthread_cond_wait(&cv, &d);
+		}
+		else
+		{
+			pthread_cond_broadcast(&cv);
 		}
 		b.count = numThreads;
-		pthread_mutex_unlock(&b.d);
+		pthread_mutex_unlock(&d);
 		
 	}
-	pthread_mutex_destroy(&b.d);
-    pthread_cond_destroy(&b.cv);
 	// largest value will be at far left of global vector
 	/*
 	for(int i = 0; i < 50; ++i)
@@ -137,5 +135,7 @@ int run(vector<int> * nums)
 		cout << args.globalNums[i] << endl;
 	}
 	*/
+	pthread_mutex_destroy(&d);
+    pthread_cond_destroy(&cv);
 	return globalNums[0];
 }

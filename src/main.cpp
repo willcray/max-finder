@@ -21,6 +21,5 @@ int main(int argc, char *argv[])
 	vector<int> nums = parse(argv[1]);
 	int max = run(&nums);
 	cout << "FINISHED: max number is " << max << endl;
-
 	return 0;
 }

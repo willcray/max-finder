@@ -9,6 +9,8 @@
 // decrement - controls access to decrement the count variable
 
 Barrier b;
+pthread_mutex_t d;
+pthread_cond_t cv;
 
 void Barrier::init(int n)
 {
@@ -25,9 +27,13 @@ void Barrier::barrierPoint()
 	// wait on increment semaphore
 	--this->count;
 
-	if(this->count <= 0)
+	if(this->count == 0)
 	{
 		pthread_cond_broadcast(&cv);
+	}
+	else
+	{
+		pthread_cond_wait(&cv, &d);
 	}
 	pthread_mutex_unlock(&d);
 

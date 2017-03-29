@@ -6,15 +6,14 @@
 class Barrier
 {
 public:
-	pthread_mutex_t d;
-	pthread_cond_t cv;
 	int count;
-	int n;
 	void init(int n);	
 	void barrierPoint();
 };
 
 extern Barrier b;
+extern pthread_mutex_t d;
+extern pthread_cond_t cv;
 
 #endif
 
