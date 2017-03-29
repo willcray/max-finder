@@ -12,8 +12,7 @@ Barrier b;
 
 void Barrier::init(int n)
 {
-	this->n = n;
-	this->count = 0;
+	this->count = n;
 	pthread_mutex_init(&d, NULL);
 	pthread_cond_init(&cv, NULL);
 }
@@ -24,9 +23,9 @@ void Barrier::barrierPoint()
 	pthread_mutex_lock(&d);
 
 	// wait on increment semaphore
-	++this->count;
+	--this->count;
 
-	if(this->count == this->n)
+	if(this->count <= 0)
 	{
 		pthread_cond_broadcast(&cv);
 	}

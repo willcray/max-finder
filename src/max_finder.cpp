@@ -120,12 +120,11 @@ int run(vector<int> * nums)
 
 		
 		pthread_mutex_lock(&b.d);
-		while(b.count != b.n)
+		while(b.count > 0)
 		{
 			pthread_cond_wait(&b.cv, &b.d);
 		}
-		b.count = 0;
-		b.n = numThreads;
+		b.count = numThreads;
 		pthread_mutex_unlock(&b.d);
 		
 	}
