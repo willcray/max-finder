@@ -108,7 +108,6 @@ int run(vector<int> * nums)
 				// cout << "left index is " << args.l << "; right index is " << args.r << endl;
 			}
 			++threadIndex;
-			cout << "left index:" << args[i].l << ": Right index:" << args[i].r << ":" << endl;
 		}
 		--numRounds;
 		indexDiff *= 2;
